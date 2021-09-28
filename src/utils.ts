@@ -58,7 +58,7 @@ export const addUser = async (
 };
 
 export const addContact = async (
-  userEmail: string,
+  useremail: string,
   firstname: string,
   lastname: string,
   email: string,
@@ -67,8 +67,8 @@ export const addContact = async (
   note: string
 ) => {
   const query = {
-    text: "INSERT INTO contacts(userEmail, firstname, lastname, email, phone, address, note) VALUES($1, $2, $3, $4,$5,$6,$7)",
-    values: [userEmail, firstname, lastname, email, phone, address, note],
+    text: "INSERT INTO contacts(useremail, firstname, lastname, email, phone, address, note) VALUES($1, $2, $3, $4,$5,$6,$7)",
+    values: [useremail, firstname, lastname, email, phone, address, note],
   };
 
   try {
@@ -80,10 +80,10 @@ export const addContact = async (
   }
 };
 
-export const deleteContact = async (userEmail: string, id: number) => {
+export const deleteContact = async (useremail: string, id: number) => {
   const query = {
-    text: "DELETE FROM contacts WHERE userEmail = $1 AND id = $2",
-    values: [userEmail, id],
+    text: "DELETE FROM contacts WHERE useremail = $1 AND id = $2",
+    values: [useremail, id],
   };
 
   try {
@@ -103,7 +103,6 @@ export const getContact = async (userEmail: string): Promise<IContact[]> => {
 
   try {
     const res = await pool.query(query);
-    console.log(res.rows);
 
     return res.rows;
   } catch (err) {

@@ -29,7 +29,7 @@ export const typeDefs = gql`
   type Mutation {
     addUser(firstname: String!, lastname: String!, email: String!, password: String!): Boolean!
     addContact(
-      userEmail: String!
+      useremail: String!
       firstname: String
       lastname: String
       email: String
@@ -37,5 +37,6 @@ export const typeDefs = gql`
       address: String
       note: String
     ): Boolean!
+    deleteContact(useremail: String!, id: Int!): Boolean!
   }
 `;

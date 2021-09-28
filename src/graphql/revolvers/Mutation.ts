@@ -1,5 +1,5 @@
 // import { v4 } from "uuid";
-import { addUser, findUserByEmail, addContact } from "../../utils";
+import { addUser, addContact, deleteContact, deleteUser } from "../../utils";
 import { IUser } from "./Query";
 import bcrypt from "bcryptjs";
 import { IContact } from "../../utils";
@@ -18,11 +18,20 @@ export const Mutation = {
 
   addContact: async (
     parent: any,
-    { userEmail, firstname, lastname, email, phone, address, note }: IContact,
+    { useremail, firstname, lastname, email, phone, address, note }: IContact,
     ctx: any
   ) => {
-    const test = await addContact(userEmail, firstname, lastname, email, phone, address, note);
+    const test = await addContact(useremail, firstname, lastname, email, phone, address, note);
 
     return test !== "ERROR";
+  },
+  deleteContact: async (
+    parent: any,
+    { useremail, id }: { useremail: string; id: number },
+    ctx: any
+  ): Promise<boolean> => {
+    const done = await deleteContact(useremail, id);
+
+    return done !== "ERROR";
   },
 };

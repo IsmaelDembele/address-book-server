@@ -66,14 +66,6 @@ export const Query = {
     ctx: any
   ): Promise<IContact[]> => {
     const contacts = await getContact(useremail);
-
-    // if(contacts) return contacts;
-    console.log("useremail", useremail);
-
-    console.log(contacts);
     return contacts;
-    // if (contacts?.length > 0) return contacts;
-
-    // return [];
   },
 };

@@ -10,48 +10,8 @@ import {
   deleteUser,
   findUserByEmail,
   deleteContact,
-  getContact
+  getContact,
 } from "./utils";
-
-const contacts = [
-  {
-    id: 1,
-    userEmail: "dembele@gmail.com",
-    firstname: "contact1",
-    lastname: "Dembele",
-    email: "contact1@gmail.com",
-    phone: "757 224 1454",
-    address: "12345 Mcknight Dr, Pittsburgh PA 15237",
-    note: "I met him in Newport News Va",
-  },
-  {
-    id: 2,
-    userEmail: "dembele@gmail.com",
-    firstname: "contact2",
-    lastname: "Dembele",
-    email: "contact2@gmail.com",
-    phone: "757 224 4457",
-    address: "1 Washington blv, Newport News VA 23608",
-    note: "I met him in Houston, TX",
-  },
-];
-
-const users = [
-  {
-    firstname: "Ismael",
-    lastname: "Dembe",
-    email: "dembele@gmail.com",
-    password: "12345",
-    contacts: contacts,
-  },
-  {
-    firstname: "Mohamed",
-    lastname: "Dembele",
-    email: "mohamed@gmail.com",
-    password: "12345",
-    contacts: contacts,
-  },
-];
 
 // createUserTable();
 // createContactTable();
@@ -65,10 +25,6 @@ const users = [
 const server = new ApolloServer({
   typeDefs,
   resolvers: { Query, Mutation },
-  context: {
-    users,
-    contacts,
-  },
 });
 
 // The `listen` method launches a web server.
