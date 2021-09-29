@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { findUserByEmail, getContact } from "../../utils";
+import { findUserByEmail, getContact, IContact, IDecoded } from "../../utils";
 import dotenv from "dotenv";
 import bcrypt from "bcryptjs";
 
@@ -11,17 +11,6 @@ export interface IUser {
   email: string;
   password: string;
   contacts: string[];
-}
-
-export interface IContact {
-  id: number;
-  useremail: string;
-  firstname: string;
-  lastname: string;
-  email: string;
-  phone: string;
-  address: string;
-  note: string;
 }
 
 export const Query = {
@@ -36,7 +25,7 @@ export const Query = {
     { email, password }: { email: string; password: string },
     ctx: any
   ): Promise<string> => {
-    if (email.length === 0 || password.length === 0) return "";
+    if (email.length === 0 || password.length < 5) return "";
 
     const user = await findUserByEmail(email);
 
@@ -58,6 +47,8 @@ export const Query = {
       );
     }
 
+    console.log();
+
     return token;
   },
   getContacts: async (
@@ -67,5 +58,28 @@ export const Query = {
   ): Promise<IContact[]> => {
     const contacts = await getContact(useremail);
     return contacts;
+  },
+
+  verifyToken: async (
+    parent: any,
+    { token, useremail }: { token: string; useremail: string },
+    ctx: any
+  ): Promise<boolean> => {
+    if (token.length === 0 || useremail.length === 0) {
+      console.log("return false");
+      return false;
+    }
+
+    try {
+      const decoded = <IDecoded>jwt.verify(token, process.env.JWT_SECRET!);
+      const { email }: { email: string } = decoded;
+
+      console.log(email === useremail);
+
+      return email === useremail;
+    } catch (error) {
+      console.log("Invalid token");
+      return false;
+    }
   },
 };

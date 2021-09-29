@@ -1,8 +1,11 @@
-// import { v4 } from "uuid";
-import { addUser, addContact, deleteContact, deleteUser } from "../../utils";
+import { addUser, addContact, deleteContact, IDecoded } from "../../utils";
+import jwt from "jsonwebtoken";
 import { IUser } from "./Query";
 import bcrypt from "bcryptjs";
 import { IContact } from "../../utils";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export const Mutation = {
   addUser: async (parent: any, { firstname, lastname, email, password }: IUser, ctx: any) => {
@@ -27,11 +30,17 @@ export const Mutation = {
   },
   deleteContact: async (
     parent: any,
-    { useremail, id }: { useremail: string; id: number },
+    { token, id }: { token: string; id: number },
     ctx: any
   ): Promise<boolean> => {
-    const done = await deleteContact(useremail, id);
-
-    return done !== "ERROR";
+    try {
+      const decoded = <IDecoded>jwt.verify(token, process.env.JWT_SECRET!);
+      const { email }: { email: string } = decoded;
+      const done = await deleteContact(email, id);
+      return done !== "ERROR";
+    } catch (error) {
+      console.log("Invalid token", error);
+      return false;
+    }
   },
 };

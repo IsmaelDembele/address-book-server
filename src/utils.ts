@@ -18,6 +18,14 @@ export interface IContact {
   note: string;
 }
 
+export interface IDecoded {
+  email: string;
+  firstname: string;
+  lastname: string;
+  iat: number;
+  exp: number;
+}
+
 export const readQuery = async (query: string) => {
   try {
     const res = await pool.query(query);

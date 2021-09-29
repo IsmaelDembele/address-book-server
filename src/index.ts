@@ -11,6 +11,7 @@ import {
   findUserByEmail,
   deleteContact,
   getContact,
+  addContact,
 } from "./utils";
 
 // createUserTable();
@@ -21,6 +22,7 @@ import {
 // deleteUser('dembele.ismael@gmail.com');
 // deleteContact('hi@hi.com',1);
 // getContact('hi@hi.com');
+// addContact("hi@hi.com","first","last","email6","phone","address","note")
 
 const server = new ApolloServer({
   typeDefs,
