@@ -12,11 +12,14 @@ export const Mutation = {
     const encryptedPwd = await bcrypt.hash(password, 12);
 
     if (!encryptedPwd) return false;
+    let result = "";
+    result = await addUser(email, firstname, lastname, encryptedPwd);
 
-    const test = await addUser(email, firstname, lastname, encryptedPwd);
-    // console.log(test !== "ERROR");
+    if (result !== "success") {
+      throw new Error(result);
+    }
 
-    return test !== "ERROR";
+    return result === "success";
   },
 
   addContact: async (
@@ -24,23 +27,33 @@ export const Mutation = {
     { useremail, firstname, lastname, email, phone, address, note }: IContact,
     ctx: any
   ) => {
-    const test = await addContact(useremail, firstname, lastname, email, phone, address, note);
+    const result = await addContact(useremail, firstname, lastname, email, phone, address, note);
 
-    return test !== "ERROR";
+    if (result !== "success") {
+      throw new Error(result);
+    }
+
+    return result !== "success";
   },
   deleteContact: async (
     parent: any,
     { token, id }: { token: string; id: number },
     ctx: any
   ): Promise<boolean> => {
+    let decoded: IDecoded;
+
     try {
-      const decoded = <IDecoded>jwt.verify(token, process.env.JWT_SECRET!);
-      const { email }: { email: string } = decoded;
-      const done = await deleteContact(email, id);
-      return done !== "ERROR";
+      decoded = <IDecoded>jwt.verify(token, process.env.JWT_SECRET!);
     } catch (error) {
-      console.log("Invalid token", error);
       return false;
     }
+
+    const { email }: { email: string } = decoded;
+    const done = await deleteContact(email, id);
+    if (done !== "success") {
+      throw new Error(done);
+    }
+
+    return true;
   },
 };

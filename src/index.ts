@@ -3,33 +3,12 @@ import { typeDefs } from "./graphql/schema";
 import { Query } from "./graphql/revolvers/Query";
 import { Mutation } from "./graphql/revolvers/Mutation";
 
-import {
-  createContactTable,
-  createUserTable,
-  addUser,
-  deleteUser,
-  findUserByEmail,
-  deleteContact,
-  getContact,
-  addContact,
-} from "./utils";
-
-// createUserTable();
-// createContactTable();
-// findUserByEmail('dembele@gmail.com');
-// findUserByEmail('testemail');
-//  addUser(users[1].email,users[1].firstname,users[1].lastname,users[1].password);
-// deleteUser('dembele.ismael@gmail.com');
-// deleteContact('hi@hi.com',1);
-// getContact('hi@hi.com');
-// addContact("hi@hi.com","first","last","email6","phone","address","note")
-
 const server = new ApolloServer({
   typeDefs,
   resolvers: { Query, Mutation },
 });
 
 // The `listen` method launches a web server.
-server.listen().then(({ url }) => {
+server.listen().then(({ url }: { url: string }) => {
   console.log(`🚀  Server ready at ${url}`);
 });

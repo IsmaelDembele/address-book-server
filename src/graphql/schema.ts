@@ -21,9 +21,8 @@ export const typeDefs = gql`
   }
 
   type Query {
-    user(email: String!): User
-    getContacts(useremail: String!): [Contact]
     login(email: String!, password: String!): String!
+    getContacts(useremail: String!): [Contact]
     verifyToken(token: String!, useremail: String!): Boolean!
   }
 

@@ -26,22 +26,32 @@ export interface IDecoded {
   exp: number;
 }
 
-export const readQuery = async (query: string) => {
+export const executeMutation = async (query: { text: string; values: (string | number)[] }) => {
+  try {
+    const res = await pool.query(query);
+    return "success";
+  } catch (err: any) {
+    console.error(err?.detail);
+    return err.detail;
+  }
+};
+
+export const executeQuery = async (query: string) => {
   try {
     const res = await pool.query(query);
     return res.rows;
   } catch (err) {
-    console.error("readQuery", err);
+    console.error(err);
   }
 };
-export const readQuery2 = async (query: { text: string; values: string[] }) => {
+
+export const executeQueryWithParameters = async (query: { text: string; values: string[] }) => {
   try {
     const res = await pool.query(query);
-    // console.log(res.rows);
 
     return res.rows;
   } catch (err) {
-    console.error("readQuery", err);
+    console.error(err);
   }
 };
 
@@ -56,13 +66,7 @@ export const addUser = async (
     values: [email, firstname, lastname, password],
   };
 
-  try {
-    const res = await pool.query(query);
-    return res;
-  } catch (err) {
-    console.error("readQuery", err);
-    return "ERROR";
-  }
+  return await executeMutation(query);
 };
 
 export const addContact = async (
@@ -79,13 +83,7 @@ export const addContact = async (
     values: [useremail, firstname, lastname, email, phone, address, note],
   };
 
-  try {
-    const res = await pool.query(query);
-    return res;
-  } catch (err) {
-    console.error("readQuery", err);
-    return "ERROR";
-  }
+  return await executeMutation(query);
 };
 
 export const deleteContact = async (useremail: string, id: number) => {
@@ -94,13 +92,7 @@ export const deleteContact = async (useremail: string, id: number) => {
     values: [useremail, id],
   };
 
-  try {
-    const res = await pool.query(query);
-    return res.rows;
-  } catch (err) {
-    console.error("readQuery", err);
-    return "ERROR";
-  }
+  return await executeMutation(query);
 };
 
 export const getContact = async (userEmail: string): Promise<IContact[]> => {
@@ -113,32 +105,21 @@ export const getContact = async (userEmail: string): Promise<IContact[]> => {
     const res = await pool.query(query);
 
     return res.rows;
-  } catch (err) {
-    console.error("readQuery", err);
-    return [];
+  } catch (err: any) {
+    console.error("executeQuery", err);
+    return [
+      {
+        id: -1,
+        useremail: "",
+        firstname: "",
+        lastname: "",
+        email: "",
+        phone: "",
+        address: "",
+        note: "",
+      },
+    ];
   }
-};
-
-export const deleteUser = async (email: string) => {
-  const query = {
-    text: "DELETE FROM users WHERE email = $1",
-    values: [email],
-  };
-
-  readQuery2(query);
-};
-
-export const updateUser = async (newUser: IUser) => {
-  const query = {
-    text: `UPDATE users
-           SET email = $1,
-               firstname = $2,
-               lastname = $3,
-               password = $4  WHERE email = User.email`,
-    values: [newUser.email, newUser.firstname, newUser.lastname, newUser.password],
-  };
-
-  readQuery2(query);
 };
 
 export const findUserByEmail = async (email: string) => {
@@ -147,7 +128,19 @@ export const findUserByEmail = async (email: string) => {
     values: [email],
   };
 
-  return readQuery2(query);
+  return await executeQueryWithParameters(query);
+};
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//additional function not use in the code
+
+export const deleteUser = async (email: string) => {
+  const query = {
+    text: "DELETE FROM users WHERE email = $1",
+    values: [email],
+  };
+
+  executeQueryWithParameters(query);
 };
 
 export const createUserTable = async () => {
@@ -160,7 +153,7 @@ export const createUserTable = async () => {
     )
     `;
 
-  return readQuery(query);
+  return executeQuery(query);
 };
 
 export const createContactTable = async () => {
@@ -177,5 +170,18 @@ export const createContactTable = async () => {
     )
     `;
 
-  return readQuery(query);
+  return executeQuery(query);
+};
+
+export const updateUser = async (newUser: IUser) => {
+  const query = {
+    text: `UPDATE users
+           SET email = $1,
+               firstname = $2,
+               lastname = $3,
+               password = $4  WHERE email = User.email`,
+    values: [newUser.email, newUser.firstname, newUser.lastname, newUser.password],
+  };
+
+  executeQueryWithParameters(query);
 };

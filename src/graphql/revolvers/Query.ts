@@ -14,12 +14,6 @@ export interface IUser {
 }
 
 export const Query = {
-  user: (parent: any, args: { email: string }, { users }: { users: IUser[] }) => {
-    return users.find(user => {
-      return user.email === args.email;
-    });
-  },
-
   login: async (
     parent: any,
     { email, password }: { email: string; password: string },
@@ -32,31 +26,41 @@ export const Query = {
     if (!user || user[0]?.email !== email) return "";
 
     let token = "";
+    let err = [];
 
     if (await bcrypt.compare(password, user[0].password)) {
       // the username, password combination is successful
-
-      token = jwt.sign(
-        {
-          email: user[0].email,
-          firstname: user[0].firstname,
-          lastname: user[0].lastname,
-        },
-        process.env.JWT_SECRET!,
-        { expiresIn: 24 * 60 * 60 * 1000 }
-      );
+      try {
+        token = jwt.sign(
+          {
+            email: user[0].email,
+            firstname: user[0].firstname,
+            lastname: user[0].lastname,
+          },
+          process.env.JWT_SECRET!,
+          { expiresIn: 24 * 60 * 60 * 1000 }
+        );
+      } catch (error) {
+        err.push(error);
+      }
     }
 
-    console.log();
-
+    if (err.length > 0) {
+      throw new Error("can't generate a sign in token");
+    }
     return token;
   },
+  
   getContacts: async (
     parent: any,
     { useremail }: { useremail: string },
     ctx: any
   ): Promise<IContact[]> => {
     const contacts = await getContact(useremail);
+
+    if (contacts.length > 0 && contacts[0].id === -1) {
+      throw new Error("error trying to get contact list");
+    }
     return contacts;
   },
 
@@ -66,20 +70,19 @@ export const Query = {
     ctx: any
   ): Promise<boolean> => {
     if (token.length === 0 || useremail.length === 0) {
-      console.log("return false");
       return false;
     }
 
+    let decoded: IDecoded;
+
     try {
-      const decoded = <IDecoded>jwt.verify(token, process.env.JWT_SECRET!);
-      const { email }: { email: string } = decoded;
-
-      console.log(email === useremail);
-
-      return email === useremail;
+      decoded = <IDecoded>jwt.verify(token, process.env.JWT_SECRET!);
     } catch (error) {
       console.log("Invalid token");
       return false;
     }
+
+    const { email }: { email: string } = decoded;
+    return email === useremail;
   },
 };
