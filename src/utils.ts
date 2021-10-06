@@ -160,7 +160,7 @@ export const createContactTable = async () => {
   const query = `
     CREATE TABLE contacts (
         id serial primary key,
-        userEmail varchar references users (email),
+        useremail varchar references users (email),
         firstname varchar,
         lastname varchar,
         email varchar,
