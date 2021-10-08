@@ -5,7 +5,7 @@ dotenv.config();
 
 const connectionString = process.env.DATABASE_URL;
 
-console.log("connection string", connectionString);
+// console.log("connection string", connectionString);
 
 export const pool =
   process.env.NODE_ENV === "production"
