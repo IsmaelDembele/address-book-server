@@ -16,7 +16,7 @@ export const Mutation = {
     result = await addUser(email, firstname, lastname, encryptedPwd);
 
     if (result !== "success") {
-      console.log(result);
+      console.log("---------------------------------", result);
 
       throw new Error(result);
     }
