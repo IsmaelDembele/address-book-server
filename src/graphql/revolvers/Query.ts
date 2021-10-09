@@ -45,8 +45,6 @@ export const Query = {
       }
     }
 
-    console.log("token", token);
-
     if (err.length > 0) {
       throw new Error("can't generate a sign in token");
     }
