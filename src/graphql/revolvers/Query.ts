@@ -22,8 +22,7 @@ export const Query = {
     if (email.length === 0 || password.length < 5) return "";
 
     const user = await findUserByEmail(email);
-    console.log('users inside loggin',user);
-    
+
     if (!user || user[0]?.email !== email) return "";
 
     let token = "";
@@ -46,12 +45,14 @@ export const Query = {
       }
     }
 
+    console.log("token", token);
+
     if (err.length > 0) {
       throw new Error("can't generate a sign in token");
     }
     return token;
   },
-  
+
   getContacts: async (
     parent: any,
     { useremail }: { useremail: string },
