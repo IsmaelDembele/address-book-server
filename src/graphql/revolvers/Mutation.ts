@@ -5,6 +5,7 @@ import bcrypt from "bcryptjs";
 import { IContact } from "../../utils";
 import dotenv from "dotenv";
 
+
 dotenv.config();
 
 export const Mutation = {
@@ -16,6 +17,8 @@ export const Mutation = {
     result = await addUser(email, firstname, lastname, encryptedPwd);
 
     if (result !== "success") {
+      console.log(result);
+      
       throw new Error(result);
     }
 
