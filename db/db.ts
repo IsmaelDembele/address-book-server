@@ -31,7 +31,7 @@ console.log(`
   host: ${process.env.DB_HOST},
   database: ${process.env.DB_NAME},
   password: ${process.env.DB_PASS},
-  port: ${+process.env.DB_PORT!},
+  port: 5432,
 `);
 
 export const pool = new Pool({
@@ -39,5 +39,5 @@ export const pool = new Pool({
   host: process.env.DB_HOST,
   database: process.env.DB_NAME,
   password: process.env.DB_PASS,
-  port: +process.env.DB_PORT!,
+  port: 5432,
 });
