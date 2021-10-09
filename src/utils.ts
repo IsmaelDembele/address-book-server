@@ -51,7 +51,7 @@ export const executeQueryWithParameters = async (query: { text: string; values: 
 
     return res.rows;
   } catch (err) {
-    console.error(err);
+    console.error("exec query w/ par", err);
   }
 };
 

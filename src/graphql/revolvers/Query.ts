@@ -22,7 +22,8 @@ export const Query = {
     if (email.length === 0 || password.length < 5) return "";
 
     const user = await findUserByEmail(email);
-
+    console.log('users inside loggin',users);
+    
     if (!user || user[0]?.email !== email) return "";
 
     let token = "";
