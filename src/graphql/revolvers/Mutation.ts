@@ -11,18 +11,17 @@ export const Mutation = {
   addUser: async (parent: any, { firstname, lastname, email, password }: IUser, ctx: any) => {
     const encryptedPwd = await bcrypt.hash(password, 12);
 
-    return true;
-    // if (!encryptedPwd) return false;
-    // let result = "";
-    // result = await addUser(email, firstname, lastname, encryptedPwd);
+    if (!encryptedPwd) return false;
+    let result = "";
+    result = await addUser(email, firstname, lastname, encryptedPwd);
 
-    // if (result !== "success") {
-    //   console.log(result);
+    if (result !== "success") {
+      console.log(result);
 
-    //   throw new Error(result);
-    // }
+      throw new Error(result);
+    }
 
-    // return result === "success";
+    return result === "success";
   },
 
   addContact: async (
