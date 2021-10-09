@@ -5,24 +5,24 @@ import bcrypt from "bcryptjs";
 import { IContact } from "../../utils";
 import dotenv from "dotenv";
 
-
 dotenv.config();
 
 export const Mutation = {
   addUser: async (parent: any, { firstname, lastname, email, password }: IUser, ctx: any) => {
     const encryptedPwd = await bcrypt.hash(password, 12);
 
-    if (!encryptedPwd) return false;
-    let result = "";
-    result = await addUser(email, firstname, lastname, encryptedPwd);
+    return true;
+    // if (!encryptedPwd) return false;
+    // let result = "";
+    // result = await addUser(email, firstname, lastname, encryptedPwd);
 
-    if (result !== "success") {
-      console.log(result);
-      
-      throw new Error(result);
-    }
+    // if (result !== "success") {
+    //   console.log(result);
 
-    return result === "success";
+    //   throw new Error(result);
+    // }
+
+    // return result === "success";
   },
 
   addContact: async (
